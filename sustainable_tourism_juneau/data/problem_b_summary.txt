@@ -1,0 +1,107 @@
+MCM 2025 Problem B: Managing Sustainable Tourism in Juneau, Alaska
+================================================================
+
+PROBLEM OVERVIEW:
+- Location: Juneau, Alaska (accessible only by air/sea, no roads)
+- Key Challenge: Balance tourism revenue, glacier preservation, resident quality of life
+- Time Horizon: 2025-2045 (20 years)
+- Current State: 1.6M tourists/year, $375M revenue, 32K population
+
+KEY DATA POINTS EXTRACTED:
+=========================
+
+Tourism Metrics:
+- 2023 Visitors: 1,600,000
+- 2023 Revenue: $375,000,000
+- Tourism Season: ~180 days/year (June-October peak)
+- Per Capita Spending: ~$234/visitor
+- Access: Cruise ships (80%+) + flights
+
+Population & Demographics:
+- Permanent Residents: 32,000
+- Economic Dependence: High reliance on tourism
+- Quality of Life Concerns: Traffic, housing, services strain
+
+Environmental Concerns:
+- Mendenhall Glacier: Major attraction, significant retreat observed
+- Natural Retreat Rate: ~5% annually
+- Tourist Impact: Additional retreat acceleration
+- Ecosystem Sensitivity: Fragile subarctic environment
+
+Current Challenges:
+- Seasonal Overcrowding: Cruise ship surges
+- Infrastructure Strain: Limited capacity for growth
+- Environmental Impact: Glacier retreat acceleration
+- Resident Impact: Quality of life degradation
+- Economic Pressure: Need for sustainable revenue streams
+
+Proposed Solutions Needed:
+- Capacity Management: Daily visitor limits
+- Pricing Strategies: Entrance fees, dynamic pricing
+- Environmental Investment: Glacier protection funding
+- Resident Support: Quality of life improvements
+- Long-term Planning: 20-year sustainable strategy
+
+MODEL ASSUMPTIONS USED:
+======================
+
+Tourism System:
+- Daily Capacity Range: 10,000 - 20,000 visitors
+- Entrance Fee Range: $0 - $50
+- Environmental Investment: 10-50% of revenue
+- Tourist Attraction: Glacier (40%), Whale watching (30%), Crowding effects (30%)
+- Crowding Threshold: 15,000 daily visitors
+
+Glacier Dynamics:
+- Initial Size: 1.0 (normalized)
+- Natural Retreat: 5% annually
+- Tourist Acceleration: +20% retreat per million additional visitors
+- Investment Mitigation: Environmental spending reduces retreat by 10-50%
+
+Socio-Economic Factors:
+- Resident Satisfaction: Max(0, 1 - 0.5 × tourist/resident ratio)
+- Revenue Streams: Entrance fees + per capita spending
+- Crowding Penalty: Reduced spending when above capacity
+- Discount Rate: 5% for NPV calculations
+
+SUCCESS METRICS:
+===============
+
+Objectives (Multi-objective Optimization):
+1. Economic: Maximize NPV of tourism revenue (2025-2045)
+2. Environmental: Maximize final glacier preservation
+3. Social: Maximize average resident satisfaction
+
+Key Performance Indicators:
+- Total 20-year tourist visits
+- Average annual revenue
+- Glacier preservation percentage
+- Resident satisfaction levels
+- Revenue volatility and stability
+
+EXPECTED OUTCOMES:
+=================
+
+Pareto Optimal Solutions:
+- Economic Priority: High revenue, lower environmental/social performance
+- Environmental Priority: Maximum glacier preservation, moderate revenue
+- Social Priority: High resident satisfaction, balanced trade-offs
+- Balanced Solutions: Compromise across all objectives
+
+Policy Recommendations:
+- Specific daily caps, fees, and investment ratios
+- Implementation timeline and monitoring strategies
+- Adaptation for other tourism destinations
+- Sensitivity analysis and robustness testing
+
+DELIVERABLES:
+============
+
+1. Complete Python Implementation
+2. Pareto Optimal Solution Set (CSV)
+3. Visualization Suite (8+ plots)
+4. Policy Recommendation Framework
+5. MCM Paper Sections (Model, Results, Discussion)
+
+File generated: 2025-01-26
+Model Version: 1.0.0
