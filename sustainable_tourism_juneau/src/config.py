@@ -89,6 +89,12 @@ DECISION_VARIABLE_RANGES = {
     'eco_investment_ratio': [0.1, 0.5]   # 环保投资比例范围(收入占比)
 }
 
+# 新增财务/决策平滑与风险参数
+PRICE_SMOOTHING_ALPHA = 0.6        # 门票平滑系数(alpha*current + (1-alpha)*prev)
+FINANCIAL_STOPLOSS_THRESHOLD = 50_000_000  # 年净收入阈值，低于则触发止损机制
+FINANCIAL_STOPLOSS_PENALTY = 0.7  # 止损时净收入乘数（保守估计）
+TAX_LAG_YEARS = 1                 # 税收分配滞后年数
+
 # 优化算法参数
 NSGA_II_POPULATION_SIZE = 100  # NSGA-II种群大小
 NSGA_II_GENERATIONS = 500      # NSGA-II迭代代数

@@ -264,29 +264,43 @@ def simulate_policy(policy: Tuple[float, float, float]) -> Dict:
     community_benefits = [0.0]              # 社区福利积累
     economic_spillover = [0.0]              # 经济外溢效应
     population_trend = [POPULATION_JUNEAU]  # 人口变化趋势
+    # 财务与平滑状态
+    prev_entrance_fee = entrance_fee
+    tax_history = [0.0] * (TAX_LAG_YEARS + 1)  # 用于实现税收滞后分配
 
     # 仿真循环
     for year in years:
-        # 基于当前状态计算吸引力
+        # 门票价格平滑（避免价格剧烈跳动对需求的非理性冲击）
+        smoothed_fee = PRICE_SMOOTHING_ALPHA * entrance_fee + (1 - PRICE_SMOOTHING_ALPHA) * prev_entrance_fee
+        prev_entrance_fee = smoothed_fee
+
+        # 基于当前状态计算吸引力（使用日均估计游客）
         daily_visitors_estimate = min(daily_cap, BASE_TOURISTS_2023 / TOURISM_DAYS_PER_YEAR)
         attractiveness = calculate_tourist_attractiveness(glacier_size[-1], daily_visitors_estimate,
                                                         reputation[-1], year)
         attractiveness_history.append(attractiveness)
 
         # 计算游客需求(考虑声誉和经济因素)
-        annual_tourists = calculate_tourist_demand(attractiveness, entrance_fee, reputation[-1], year)
+        annual_tourists = calculate_tourist_demand(attractiveness, smoothed_fee, reputation[-1], year)
         tourists.append(annual_tourists)
 
         # 计算收入(考虑通胀和税收)
-        annual_revenue = calculate_revenue(annual_tourists, daily_cap, entrance_fee)
+        annual_revenue = calculate_revenue(annual_tourists, daily_cap, smoothed_fee)
         # 应用通胀调整
         inflation_adjusted_revenue = annual_revenue * ((1 + INFLATION_RATE) ** (year - 2023))
-        # 扣除税收
+        # 计算税收（应用税率），但分配给社区使用时采用滞后机制
+        tax_revenue = inflation_adjusted_revenue * TAX_RATE
+        # 当前年可用净收入先不包含税收分配
         net_revenue = inflation_adjusted_revenue * (1 - TAX_RATE)
         revenue.append(net_revenue)
 
         # 计算居民满意度(考虑社区福利)
         eco_investment_amount = net_revenue * eco_investment_ratio
+        # 若净收入低于阈值，触发财务止损机制（限制投资与分配）
+        if net_revenue < FINANCIAL_STOPLOSS_THRESHOLD:
+            net_revenue = net_revenue * FINANCIAL_STOPLOSS_PENALTY
+            eco_investment_amount = net_revenue * eco_investment_ratio
+
         annual_satisfaction = calculate_resident_satisfaction(annual_tourists,
                                                             eco_investment_amount,
                                                             community_benefits[-1], year)
@@ -316,9 +330,12 @@ def simulate_policy(policy: Tuple[float, float, float]) -> Dict:
         new_pollution = max(0, pollution_level[-1] + tourist_pollution - pollution_recovery)
         pollution_level.append(new_pollution)
 
-        # 更新社区福利(基于税收和企业社会责任)
-        tax_revenue = inflation_adjusted_revenue * TAX_RATE
-        community_allocation = tax_revenue * COMMUNITY_BENEFIT_SHARE
+        # 更新税收历史并按滞后分配到社区福利
+        tax_history.append(tax_revenue)
+        # 本次分配使用 TAX_LAG_YEARS 年前的税收（若可用）
+        lag_index = -1 - TAX_LAG_YEARS
+        lagged_tax = tax_history[lag_index] if len(tax_history) >= TAX_LAG_YEARS + 1 else 0.0
+        community_allocation = lagged_tax * COMMUNITY_BENEFIT_SHARE
         new_community_benefits = community_benefits[-1] + community_allocation
         community_benefits.append(new_community_benefits)
 
